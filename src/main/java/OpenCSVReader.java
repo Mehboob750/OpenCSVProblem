@@ -1,8 +1,11 @@
-import com.opencsv.CSVReader;
+import com.dumyproject.CSVUser;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Iterator;
 import java.util.List;
 
 public class OpenCSVReader {
@@ -11,15 +14,20 @@ public class OpenCSVReader {
     public static void main(String[] args) throws IOException {
         try (
             Reader reader = Files.newBufferedReader(Paths.get(SAMPLE_CSV_FILE_PATH));
-            CSVReader csvReader = new CSVReader(reader);
         ){
-            //Reading All Records at once into a List<String[]>
-            List<String[]> records = csvReader.readAll();
-            for (String[] record: records) {
-                System.out.println("Name :"+ record[0]);
-                System.out.println("Email :"+ record[1]);
-                System.out.println("Phone :"+ record[2]);
-                System.out.println("Country :"+record[3]);
+            CsvToBean<CSVUser>csvToBean = new CsvToBeanBuilder(reader)
+                    .withType(CSVUser.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+
+            Iterator<CSVUser> csvUserIterator = csvToBean.iterator();
+
+            while (csvUserIterator.hasNext()) {
+                CSVUser csvUser = csvUserIterator.next();
+                System.out.println("Name :"+ csvUser.getName());
+                System.out.println("Email :"+ csvUser.getEmail());
+                System.out.println("Phone :"+ csvUser.getPhoneNo());
+                System.out.println("Country :"+ csvUser.getCountry());
                 System.out.println("========================");
             }
         }

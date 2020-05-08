@@ -20,10 +20,8 @@ public class OpenCSVReader {
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
 
-            Iterator<CSVUser> csvUserIterator = csvToBean.iterator();
-
-            while (csvUserIterator.hasNext()) {
-                CSVUser csvUser = csvUserIterator.next();
+            List<CSVUser> csvUsers = csvToBean.parse();
+            for (CSVUser csvUser: csvUsers) {
                 System.out.println("Name :"+ csvUser.getName());
                 System.out.println("Email :"+ csvUser.getEmail());
                 System.out.println("Phone :"+ csvUser.getPhoneNo());
